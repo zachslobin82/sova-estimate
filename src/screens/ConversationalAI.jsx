@@ -421,40 +421,47 @@ export default function ConversationalAI({
             <p className="own-words__interim" aria-live="polite">{interimText}</p>
           )}
 
-          <div className="convo-ai__reply-row convo-ai__reply-row--phase1">
-            <input
-              type="text"
-              className="convo-ai__reply-input"
-              value={inputText}
-              onChange={e => setInputText(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  handleBegin()
-                }
-              }}
-              placeholder="Share what's on your mind…"
-              aria-label="Share anything on your mind"
-            />
-            {speechAvailable && (
+          <div className="convo-ai__phase1-input-wrap">
+            <div className="convo-ai__reply-row convo-ai__reply-row--phase1">
+              <input
+                type="text"
+                className="convo-ai__reply-input"
+                value={inputText}
+                onChange={e => setInputText(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    handleBegin()
+                  }
+                }}
+                placeholder="Type your message here..."
+                aria-label="Share anything on your mind"
+              />
               <button
                 type="button"
-                className={`own-words__mic${isRecording ? ' own-words__mic--recording' : ''}`}
-                onClick={toggleRecording}
-                aria-label={isRecording ? 'Stop recording' : 'Dictate with microphone'}
+                className="convo-ai__send"
+                onClick={handleBegin}
+                disabled={!inputText.trim()}
+                aria-label="Send"
               >
-                <MicIcon />
+                Send
               </button>
+            </div>
+
+            {speechAvailable && (
+              <>
+                <p className="convo-ai__phase1-or">or</p>
+                <button
+                  type="button"
+                  className={`own-words__mic own-words__mic--phase1${isRecording ? ' own-words__mic--recording' : ''}`}
+                  onClick={toggleRecording}
+                  aria-label={isRecording ? 'Stop recording' : 'Dictate with microphone'}
+                >
+                  <MicIcon />
+                  {isRecording ? 'Recording…' : 'Tap to speak'}
+                </button>
+              </>
             )}
-            <button
-              type="button"
-              className="convo-ai__send"
-              onClick={handleBegin}
-              disabled={!inputText.trim()}
-              aria-label="Send"
-            >
-              Send
-            </button>
           </div>
 
           <p className="convo-ai__ai-disclaimer">

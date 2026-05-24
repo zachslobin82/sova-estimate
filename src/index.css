@@ -1623,13 +1623,45 @@ body {
   margin-top: 0.5rem;
 }
 
-/* Phase 1 inline input row — same row as chat replies, with entry animation */
-.convo-ai__reply-row--phase1 {
+/* Phase 1 input wrap — stacks input row + or + mic vertically */
+.convo-ai__phase1-input-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   margin-bottom: 0.75rem;
 
   opacity: 0;
   animation: fadeUp 0.55s ease forwards;
   animation-delay: 0.15s;
+}
+
+/* Phase 1 inline input row — box border instead of underline-only */
+.convo-ai__reply-row--phase1 {
+  border-bottom: none;
+  border: 1px solid rgba(28, 26, 24, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+/* "or" separator between input and mic button */
+.convo-ai__phase1-or {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-align: center;
+  margin: 0.65rem 0 0.5rem;
+}
+
+/* Phase 1 mic button — more prominent, full label visible */
+.own-words__mic--phase1 {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.82rem;
 }
 
 /* ── Reply input row ── */

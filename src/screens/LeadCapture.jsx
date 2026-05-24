@@ -8,7 +8,8 @@ export default function LeadCapture({ initialValues = {}, onContinue, onBack }) 
   const canSubmit =
     form.firstName.trim() !== '' &&
     form.lastName.trim()  !== '' &&
-    form.email.trim()     !== ''
+    form.email.trim()     !== '' &&
+    form.phone.trim()     !== ''
 
   function set(field, value) {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -82,12 +83,12 @@ export default function LeadCapture({ initialValues = {}, onContinue, onBack }) 
           />
         </div>
 
-        {/* Row 3: Phone (full width, optional) */}
+        {/* Row 3: Phone (full width, required) */}
         <div
           className="lead-form__field lead-form__field--full"
           style={{ animationDelay: '0.4s' }}
         >
-          <label className="lead-form__label" htmlFor="phone">Phone (optional)</label>
+          <label className="lead-form__label" htmlFor="phone">Phone</label>
           <input
             id="phone"
             className="lead-form__input"
