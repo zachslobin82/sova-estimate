@@ -5,27 +5,37 @@ const BREAST_PROCS = new Set(['breast_aug', 'breast_lift', 'breast_reduction', '
 const BODY_PROCS   = new Set(['tummy_tuck', 'lipo', 'mommy', 'body_lift', 'bbl'])
 const FACE_PROCS   = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
 
-// Unsplash direct CDN links — no API key required
+// Unsplash direct CDN links — no API key required, &crop=face ensures centered portraits
 const TESTIMONIALS = {
   breast1: {
-    imageUrl: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=300&fit=crop',
-    quote: "I couldn't be happier with my results. Dr. Slenkovich and the entire team made me feel comfortable and heard every step of the way.",
+    imageUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=400&fit=crop&crop=face',
+    quote: "I made my decision based on research and interviews with three surgeons. By doing this my choice was easy — I had the most confidence in Dr. Slenkovich and the whole team supporting me.",
+    attribution: '— Verified CPSC Patient, Breast Lift',
   },
   breast2: {
-    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop',
-    quote: "The results look completely natural. I finally feel like myself again — I only wish I had done this sooner.",
+    imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop&crop=face',
+    quote: "My results are fabulous, and they have emotionally transformed my life.",
+    attribution: '— Rose R., Denver CO · Verified CPSC Patient',
   },
-  body: {
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
-    quote: "From the first visit, Dr. Slenkovich was attentive to my concerns and addressed all my questions. He made me feel comfortable and cared for throughout the entire process.",
+  body1: {
+    imageUrl: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=400&fit=crop&crop=face',
+    quote: "Dr. Slenkovich is very patient, understanding, and genuinely cares about meeting your needs. He was attentive to my concerns and addressed all my questions about my tummy tuck. He made me feel comfortable and heard.",
+    attribution: '— Verified CPSC Patient, Tummy Tuck',
+  },
+  body2: {
+    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop&crop=face',
+    quote: "Words cannot describe how amazed I am at my results. I am so thankful to Dr. Slenkovich and his staff for the top notch care I received.",
+    attribution: '— Verified CPSC Patient, Body Procedures',
   },
   face: {
-    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=300&fit=crop',
-    quote: "The results look completely natural. I look like myself again — just refreshed. The care and attention I received at CPSC was unlike anything I expected.",
+    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&h=400&fit=crop&crop=face',
+    quote: "I spent months looking, researching, and reading reviews and couldn't be happier I came to Dr. Slenkovich. Absolutely stellar results and exceptional care.",
+    attribution: '— Verified CPSC Patient',
   },
-  other: {
-    imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
-    quote: "The team at CPSC treated me like family from the beginning. I felt I was in great hands throughout the entire experience.",
+  all: {
+    imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&h=400&fit=crop&crop=face',
+    quote: "Rarely have I seen such collaboration in any doctor's office. It's clear that Dr. Slenkovich has built a culture where patient well-being is a cornerstone. The entirety of the procedure and recovery has been nothing short of a transformative experience.",
+    attribution: '— Verified CPSC Patient',
   },
 }
 
@@ -36,13 +46,20 @@ function getTestimonialCards(proceduresSelected = []) {
     cards.push(TESTIMONIALS.breast1)
     cards.push(TESTIMONIALS.breast2)
   }
-  if ([...s].some(v => BODY_PROCS.has(v))) cards.push(TESTIMONIALS.body)
-  if ([...s].some(v => FACE_PROCS.has(v))) cards.push(TESTIMONIALS.face)
-  return cards.length ? cards : [TESTIMONIALS.other]
+  if ([...s].some(v => BODY_PROCS.has(v))) {
+    cards.push(TESTIMONIALS.body1)
+    cards.push(TESTIMONIALS.body2)
+  }
+  if ([...s].some(v => FACE_PROCS.has(v))) {
+    cards.push(TESTIMONIALS.face)
+  }
+  // Always append the universal "all patients" card
+  cards.push(TESTIMONIALS.all)
+  return cards
 }
 
 // ── Testimonial card ──────────────────────────────────────────────────────────
-function TestimonialCard({ imageUrl, quote }) {
+function TestimonialCard({ imageUrl, quote, attribution }) {
   return (
     <div className="testimonial-card">
       <img
@@ -53,7 +70,7 @@ function TestimonialCard({ imageUrl, quote }) {
       />
       <div className="testimonial-card__body">
         <p className="testimonial-card__quote">"{quote}"</p>
-        <p className="testimonial-card__attribution">Verified CPSC Patient</p>
+        <p className="testimonial-card__attribution">{attribution}</p>
       </div>
     </div>
   )

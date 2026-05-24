@@ -2,12 +2,12 @@
 :root {
   --bg: #FFFFFF;
   --text: #1C1A18;
-  --accent: #1a2742;
-  --accent-light: rgba(26, 39, 66, 0.05);
-  --accent-mid: rgba(26, 39, 66, 0.15);
+  --accent: #2C3B2D;
+  --accent-light: rgba(44, 59, 45, 0.05);
+  --accent-mid: rgba(44, 59, 45, 0.15);
   --gold: #B8975A;
   --muted: #6B6560;
-  --border: rgba(26, 39, 66, 0.15);
+  --border: rgba(44, 59, 45, 0.15);
 
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
@@ -46,7 +46,7 @@ body {
   left: 0;
   width: 100%;
   height: 44px;
-  background: #1a2742;
+  background: #2C3B2D;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@ body {
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(26, 39, 66, 0.1);
+  background: rgba(44, 59, 45, 0.1);
   z-index: 150;
 }
 
@@ -165,7 +165,7 @@ body {
 .welcome__ornament-line {
   flex: 1;
   height: 1px;
-  background: rgba(26, 39, 66, 0.25);
+  background: rgba(44, 59, 45, 0.25);
   max-width: 72px;
 }
 
@@ -388,15 +388,15 @@ body {
 
 .option-card:hover:not(.option-card--selected) {
   background: var(--accent-light);
-  border-color: rgba(26, 39, 66, 0.3);
-  border-left-color: rgba(26, 39, 66, 0.3);
+  border-color: rgba(44, 59, 45, 0.3);
+  border-left-color: rgba(44, 59, 45, 0.3);
 }
 
 /* Selected state: navy left accent + tinted background */
 .option-card--selected {
   border-color: var(--border);
   border-left-color: var(--accent);
-  background: rgba(26, 39, 66, 0.06);
+  background: rgba(44, 59, 45, 0.06);
 }
 
 /* Navy shimmer sweep on selection */
@@ -407,7 +407,7 @@ body {
   background: linear-gradient(
     105deg,
     transparent 20%,
-    rgba(26, 39, 66, 0.06) 50%,
+    rgba(44, 59, 45, 0.06) 50%,
     transparent 80%
   );
   background-size: 300% 100%;
@@ -532,14 +532,14 @@ body {
 }
 
 .chip:hover:not(.chip--selected) {
-  background: rgba(26, 39, 66, 0.04);
-  border-color: rgba(26, 39, 66, 0.3);
+  background: rgba(44, 59, 45, 0.04);
+  border-color: rgba(44, 59, 45, 0.3);
 }
 
 /* Selected: full navy border + tint (no left-only — pills look best with all-around) */
 .chip--selected {
   border-color: var(--accent);
-  background: rgba(26, 39, 66, 0.06);
+  background: rgba(44, 59, 45, 0.06);
   color: var(--text);
 }
 
@@ -746,7 +746,7 @@ body {
 .estimate-interstitial__orn-line {
   flex: 1;
   height: 1px;
-  background: rgba(26, 39, 66, 0.25);
+  background: rgba(44, 59, 45, 0.25);
 }
 
 .estimate-interstitial__orn-diamond {
@@ -999,8 +999,8 @@ body {
 }
 
 .estimate__booking-btn:hover {
-  background: #1a2742;
-  border-color: #1a2742;
+  background: #2C3B2D;
+  border-color: #2C3B2D;
   color: #ffffff;
 }
 
@@ -1393,8 +1393,8 @@ body {
 }
 
 @keyframes micPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 39, 66, 0); }
-  50%       { box-shadow: 0 0 0 5px rgba(26, 39, 66, 0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(44, 59, 45, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(44, 59, 45, 0.15); }
 }
 
 /* Skip link */
@@ -1559,7 +1559,7 @@ body {
 /* AI bubble — left, white with navy border */
 .convo-ai__bubble--assistant {
   background: #ffffff;
-  border: 1px solid rgba(26, 39, 66, 0.15);
+  border: 1px solid rgba(44, 59, 45, 0.15);
   border-radius: 12px 12px 12px 2px;
 }
 
@@ -1602,8 +1602,8 @@ body {
 }
 
 .convo-ai__cta:hover {
-  background: #1a2742;
-  border-color: #1a2742;
+  background: #2C3B2D;
+  border-color: #2C3B2D;
   color: #ffffff;
 }
 
