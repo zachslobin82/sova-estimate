@@ -44,6 +44,75 @@ const FALLBACK_TEXT =
   "Based on everything you've shared — your goals, where you are in your journey, " +
   "and what matters most to you — we've prepared this investment overview with care and intention."
 
+// ── Social proof data ────────────────────────────────────────────────────────
+
+const BREAST_PROCS = new Set(['breast_aug', 'breast_lift', 'breast_reduction', 'breast_revision'])
+const BODY_PROCS   = new Set(['tummy_tuck', 'lipo', 'mommy', 'body_lift', 'bbl'])
+const FACE_PROCS   = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
+
+const SOCIAL_PROOF = {
+  breast1: {
+    imageUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=400&fit=crop&crop=face',
+    quote: "I made my decision based on research and interviews with three surgeons. By doing this my choice was easy — I had the most confidence in the whole team supporting me.",
+    attribution: '— Verified CPSC Patient, Breast Lift',
+  },
+  breast2: {
+    imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop&crop=face',
+    quote: "My results are fabulous, and they have emotionally transformed my life.",
+    attribution: '— Rose R., Denver CO · Verified CPSC Patient',
+  },
+  body1: {
+    imageUrl: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=400&fit=crop&crop=face',
+    quote: "He was attentive to my concerns and addressed all my questions about my tummy tuck. He made me feel comfortable and heard.",
+    attribution: '— Verified CPSC Patient, Tummy Tuck',
+  },
+  body2: {
+    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop&crop=face',
+    quote: "Words cannot describe how amazed I am at my results. I am so thankful for the top notch care I received.",
+    attribution: '— Verified CPSC Patient, Body Procedures',
+  },
+  face: {
+    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&h=400&fit=crop&crop=face',
+    quote: "I spent months researching and couldn't be happier I came here. Absolutely stellar results and exceptional care.",
+    attribution: '— Verified CPSC Patient',
+  },
+  all: {
+    imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&h=400&fit=crop&crop=face',
+    quote: "Rarely have I seen such collaboration in any doctor's office. It's clear this practice has built a culture where patient well-being is a cornerstone. Nothing short of a transformative experience.",
+    attribution: '— Verified CPSC Patient',
+  },
+}
+
+function getSocialProofCards(proceduresSelected = []) {
+  const s = new Set(proceduresSelected)
+  const cards = []
+  if ([...s].some(v => BREAST_PROCS.has(v))) {
+    cards.push(SOCIAL_PROOF.breast1)
+    cards.push(SOCIAL_PROOF.breast2)
+  }
+  if ([...s].some(v => BODY_PROCS.has(v))) {
+    cards.push(SOCIAL_PROOF.body1)
+    cards.push(SOCIAL_PROOF.body2)
+  }
+  if ([...s].some(v => FACE_PROCS.has(v))) {
+    cards.push(SOCIAL_PROOF.face)
+  }
+  cards.push(SOCIAL_PROOF.all) // always shown last
+  return cards
+}
+
+function SocialProofCard({ imageUrl, quote, attribution }) {
+  return (
+    <div className="estimate__testimonial-card">
+      <img src={imageUrl} alt="" className="estimate__testimonial-card__image" loading="lazy" />
+      <div className="estimate__testimonial-card__body">
+        <p className="estimate__testimonial-card__quote">"{quote}"</p>
+        <p className="estimate__testimonial-card__attribution">{attribution}</p>
+      </div>
+    </div>
+  )
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function Estimate({ answers, onContinue, onBack, onView }) {
@@ -85,7 +154,7 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
     }
 
     const systemPrompt = [
-      "You are writing a brief message on behalf of a luxury plastic surgery practice to a patient who just completed a planning estimator. Write exactly 2 sentences — maximum 45 words. Speak directly to the patient as 'you'. Never use 'I'. Never open with 'Thank you' or 'We'. Do not use words like 'wonderful', 'excited', 'amazing', or 'journey'. Be warm but grounded — like a confident, caring professional, not a cheerleader. Reference something specific the patient shared. Use 'investment' not 'cost'. No promises about results.",
+      "You are writing a brief message on behalf of a luxury plastic surgery practice to a patient who just completed a planning estimator. Write exactly 2 sentences — maximum 45 words. Speak directly to the patient as 'you'. Never use 'I'. Never open with 'Thank you' or 'We'. Do not use words like 'wonderful', 'excited', 'amazing', or 'journey'. Be warm but grounded — like a confident, caring professional, not a cheerleader. Reference something specific the patient shared. Use 'investment' not 'cost'. No promises about results. Never mention a specific doctor's name — not Dr. Slenkovich, not Dr. Roider. Always refer to 'your surgeon' or 'our team' or 'the practice.' The patient may be routed to either surgeon and we never pre-assign in the estimate.",
       "",
       "You have the following information about this patient:",
       `- Procedures they're considering: ${allProcedures.map(p => p.label).join(', ') || 'not specified'}`,
@@ -142,6 +211,7 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
 
   // Animation stagger base — starts after context settles
   const rowBase = 0.2
+  const ctaDelay = rowBase + pricedProcedures.length * 0.09 + 0.22
 
   return (
     <div className="screen estimate">
@@ -158,7 +228,7 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
         <p className="estimate__context-text">{contextText}</p>
       </div>
 
-      {/* ── Disclaimer ── */}
+      {/* ── Anchoring copy ── */}
       <div className="estimate__disclaimer-wrap">
         <div className="estimate__rule estimate__rule--disclaimer" />
         <p className="estimate__disclaimer">
@@ -212,11 +282,25 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
       {/* ── CTA ── */}
       <button
         className="btn-primary estimate__cta"
-        style={{ animationDelay: `${rowBase + pricedProcedures.length * 0.09 + 0.22}s` }}
+        style={{ animationDelay: `${ctaDelay}s` }}
         onClick={onContinue}
       >
         I'm ready to take the next step →
       </button>
+
+      {/* ── Social proof ── */}
+      <div
+        className="estimate__social-proof"
+        style={{ animationDelay: `${ctaDelay + 0.25}s` }}
+      >
+        <div className="estimate__rule estimate__rule--inner estimate__social-proof-rule" />
+        <p className="estimate__social-proof-label">From patients like you</p>
+        <div className="estimate__testimonials-scroll">
+          {getSocialProofCards(proceduresSelected).map((card, i) => (
+            <SocialProofCard key={i} {...card} />
+          ))}
+        </div>
+      </div>
 
     </div>
   )

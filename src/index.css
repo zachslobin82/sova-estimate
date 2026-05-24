@@ -1169,23 +1169,23 @@ body {
 
 /* ── Next Step: Testimonials section ────────────────────────────────────── */
 
-.next-step__testimonials {
+/* ── Estimate social proof — horizontal scroll strip ────────────────────── */
+
+.estimate__social-proof {
   width: 100%;
-  padding-bottom: 3rem;
+  margin-top: 1.5rem;
+  padding-bottom: 2rem;
 
   opacity: 0;
   animation: fadeUp 0.6s ease forwards;
-  animation-delay: 0.5s;
 }
 
-.next-step__testimonials-rule {
-  border: none;
-  border-top: 1px solid rgba(28, 26, 24, 0.1);
-  width: 100%;
-  margin: 0 0 2rem;
+.estimate__social-proof-rule {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.next-step__testimonials-label {
+.estimate__social-proof-label {
   font-family: var(--font-body);
   font-size: 0.6rem;
   font-weight: 400;
@@ -1193,65 +1193,65 @@ body {
   text-transform: uppercase;
   color: var(--muted);
   text-align: center;
-  margin-bottom: 1.25rem;
+  margin: 1.25rem 0 1rem;
 }
 
-/* Cards always flow as a centered row, wrapping on narrow screens */
-.next-step__testimonials-grid {
+/* Scrollable row — breaks out of screen padding so cards bleed to edge */
+.estimate__testimonials-scroll {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 0 var(--pad-x) 16px;
+  margin: 0 calc(-1 * var(--pad-x));
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-/* Testimonial card */
-.testimonial-card {
-  flex: 1;
-  min-width: 220px;
-  max-width: 300px;
+.estimate__testimonials-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual card — fixed width, no shrink so horizontal scroll works */
+.estimate__testimonial-card {
+  flex: 0 0 280px;
   background: #ffffff;
   border: 1px solid rgba(28, 26, 24, 0.1);
   border-radius: 4px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  text-align: left;
 }
 
-/* Unsplash image */
-.testimonial-card__image {
+.estimate__testimonial-card__image {
   width: 100%;
   height: 200px;
   object-fit: cover;
   display: block;
 }
 
-/* Card body */
-.testimonial-card__body {
-  padding: 1rem 1.1rem 1.1rem;
+.estimate__testimonial-card__body {
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.4rem;
 }
 
-.testimonial-card__quote {
+.estimate__testimonial-card__quote {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 300;
-  font-size: 0.94rem;
-  line-height: 1.65;
+  font-size: 13px;
+  line-height: 1.6;
   color: #1C1A18;
   margin: 0;
 }
 
-.testimonial-card__attribution {
+.estimate__testimonial-card__attribution {
   font-family: var(--font-body);
-  font-size: 0.69rem;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6B6560;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -1458,7 +1458,7 @@ body {
   color: #6B6560;
   text-align: center;
   line-height: 1.55;
-  margin: -1rem 0 1.5rem;
+  margin: 16px 0 1.5rem;
 
   opacity: 0;
   animation: fadeUp 0.5s ease forwards;
