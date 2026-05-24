@@ -376,10 +376,6 @@ export default function ConversationalAI({
             Share any questions, concerns, or anything else you'd like your care team to know.
           </p>
 
-          <p className="convo-ai__ai-disclaimer">
-            This conversation is powered by AI. A member of our care team will follow up personally.
-          </p>
-
           {subheadline && (
             <p className="convo-ai__sub">{subheadline}</p>
           )}
@@ -411,6 +407,10 @@ export default function ConversationalAI({
               </button>
             )}
           </div>
+
+          <p className="convo-ai__ai-disclaimer">
+            This conversation is powered by AI. A member of our care team will follow up personally.
+          </p>
 
           <div className="btn-continue-wrap">
             <button

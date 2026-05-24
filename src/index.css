@@ -1361,19 +1361,19 @@ body {
   animation-delay: 0.1s;
 }
 
-/* AI disclaimer below subheadline */
+/* AI disclaimer — below mic button, last element before patient interacts */
 .convo-ai__ai-disclaimer {
   font-family: var(--font-body);
   font-size: 0.68rem;
   font-style: italic;
-  color: var(--muted);
+  color: #6B6560;
   text-align: center;
   line-height: 1.55;
-  margin: -0.5rem 0 1.25rem;
+  margin: -1rem 0 1.5rem;
 
   opacity: 0;
   animation: fadeUp 0.5s ease forwards;
-  animation-delay: 0.12s;
+  animation-delay: 0.25s;
 }
 
 /* Phase 1 wrapper — stretches all children to the same edges */
