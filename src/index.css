@@ -778,6 +778,9 @@ body {
   text-align: center;
   justify-content: flex-start;
   padding-top: calc(var(--pad-y) * 5);
+  max-width: 760px;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 /* Headline */
@@ -1196,14 +1199,15 @@ body {
   margin: 1.25rem 0 1rem;
 }
 
-/* Scrollable row */
+/* Scrollable row — bleeds past content padding for gallery feel */
 .estimate__testimonials-scroll {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
   overflow-y: hidden;
   gap: 16px;
-  padding: 0 32px 24px 32px;
+  padding: 0 2rem 24px 2rem;
+  margin: 0 -2rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;

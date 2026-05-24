@@ -73,15 +73,16 @@ const TESTIMONIALS = {
   },
 }
 
-// 1 procedure → 1 matching card. Multiple / unknown → fallback card. Max 2.
+// Lead with the matched category, always return all 3 for a full scroll row.
 function getSocialProofCards(proceduresSelected = []) {
+  const all = [TESTIMONIALS.breast, TESTIMONIALS.body, TESTIMONIALS.face]
   if (proceduresSelected.length === 1) {
     const v = proceduresSelected[0]
-    if (BREAST_PROCS.has(v)) return [TESTIMONIALS.breast]
-    if (BODY_PROCS.has(v))   return [TESTIMONIALS.body]
-    if (FACE_PROCS.has(v))   return [TESTIMONIALS.face]
+    if (BREAST_PROCS.has(v)) return [TESTIMONIALS.breast, TESTIMONIALS.body, TESTIMONIALS.face]
+    if (BODY_PROCS.has(v))   return [TESTIMONIALS.body, TESTIMONIALS.breast, TESTIMONIALS.face]
+    if (FACE_PROCS.has(v))   return [TESTIMONIALS.face, TESTIMONIALS.breast, TESTIMONIALS.body]
   }
-  return [TESTIMONIALS.fallback]
+  return all
 }
 
 function SocialProofCard({ imageUrl, quote, attribution }) {
@@ -281,10 +282,7 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
           >
             <div className="estimate__rule estimate__rule--inner estimate__social-proof-rule" />
             <p className="estimate__social-proof-label">From patients like you</p>
-            <div
-              className="estimate__testimonials-scroll"
-              style={cards.length === 1 ? { justifyContent: 'center' } : undefined}
-            >
+            <div className="estimate__testimonials-scroll">
               {cards.map((card, i) => (
                 <SocialProofCard key={i} {...card} />
               ))}
