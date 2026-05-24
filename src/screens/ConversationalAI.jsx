@@ -96,6 +96,29 @@ function buildAffirmation(selected) {
   return "The combination you're exploring is one our team works with regularly — and the results, planned well, can be genuinely remarkable."
 }
 
+// ── Immediate-skip triggers — no API call, show CTA right away ───────────────
+const SKIP_TRIGGERS = new Set([
+  'estimate',
+  'my estimate',
+  'see estimate',
+  'get estimate',
+  'ready',
+  "i'm ready",
+  "let's go",
+  'go',
+  'next',
+  'continue',
+  'skip',
+  'move on',
+  'done',
+  'no questions',
+  'no more questions',
+])
+
+function isSkipTrigger(text) {
+  return SKIP_TRIGGERS.has(text.trim().toLowerCase())
+}
+
 // ── Fallback response (no API key / error) ───────────────────────────────────
 const FALLBACK_RESPONSE =
   "What you've shared gives us a much clearer picture of what matters to you. " +
@@ -288,6 +311,13 @@ export default function ConversationalAI({
     const history = [{ role: 'user', content: text }]
     setMessages(history)
     setIsStarted(true)
+
+    // Skip API entirely for immediate-transition phrases
+    if (isSkipTrigger(text)) {
+      setShowCTA(true)
+      return
+    }
+
     setIsTyping(true)
     processResponse(history)
   }
@@ -301,6 +331,13 @@ export default function ConversationalAI({
     const newHistory = [...messages, { role: 'user', content: text }]
     setMessages(newHistory)
     setFollowUpText('')
+
+    // Skip API entirely for immediate-transition phrases
+    if (isSkipTrigger(text)) {
+      setShowCTA(true)
+      return
+    }
+
     setIsTyping(true)
     processResponse(newHistory)
   }
