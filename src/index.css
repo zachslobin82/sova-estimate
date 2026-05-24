@@ -814,12 +814,13 @@ body {
 
 .estimate__context-text {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-style: italic;
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.6;
   color: #1C1A18;
-  max-width: 46ch;
+  max-width: 100%;
+  text-align: left;
 
   animation: fadeIn 0.55s ease forwards;
 }
@@ -874,7 +875,7 @@ body {
 .estimate__range-line {
   display: flex;
   align-items: baseline;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 0.4rem;
   padding: 0.85rem var(--pad-x);
@@ -907,7 +908,7 @@ body {
 .estimate__total-row {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.3rem;
   padding: 1rem var(--pad-x) 0.25rem;
 
@@ -958,9 +959,9 @@ body {
   font-weight: 300;
   line-height: 1.75;
   color: #6B6560;
-  text-align: center;
+  text-align: left;
   max-width: 52ch;
-  margin: 0 auto;
+  margin: 0;
 }
 
 
