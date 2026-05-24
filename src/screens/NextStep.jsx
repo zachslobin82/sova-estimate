@@ -5,21 +5,26 @@ const BREAST_PROCS = new Set(['breast_aug', 'breast_lift', 'breast_reduction', '
 const BODY_PROCS   = new Set(['tummy_tuck', 'lipo', 'mommy', 'body_lift', 'bbl'])
 const FACE_PROCS   = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
 
-const TESTIMONIAL_DATA = {
-  breast: {
-    placeholder: 'Before & After — Breast Augmentation',
+// Unsplash direct CDN links — no API key required
+const TESTIMONIALS = {
+  breast1: {
+    imageUrl: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=300&fit=crop',
     quote: "I couldn't be happier with my results. Dr. Slenkovich and the entire team made me feel comfortable and heard every step of the way.",
   },
+  breast2: {
+    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop',
+    quote: "The results look completely natural. I finally feel like myself again — I only wish I had done this sooner.",
+  },
   body: {
-    placeholder: 'Before & After — Tummy Tuck',
+    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
     quote: "From the first visit, Dr. Slenkovich was attentive to my concerns and addressed all my questions. He made me feel comfortable and cared for throughout the entire process.",
   },
   face: {
-    placeholder: 'Before & After — Facelift',
+    imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=300&fit=crop',
     quote: "The results look completely natural. I look like myself again — just refreshed. The care and attention I received at CPSC was unlike anything I expected.",
   },
   other: {
-    placeholder: 'Before & After — Results',
+    imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=300&fit=crop',
     quote: "The team at CPSC treated me like family from the beginning. I felt I was in great hands throughout the entire experience.",
   },
 }
@@ -27,22 +32,25 @@ const TESTIMONIAL_DATA = {
 function getTestimonialCards(proceduresSelected = []) {
   const s = new Set(proceduresSelected)
   const cards = []
-  if ([...s].some(v => BREAST_PROCS.has(v))) cards.push(TESTIMONIAL_DATA.breast)
-  if ([...s].some(v => BODY_PROCS.has(v)))   cards.push(TESTIMONIAL_DATA.body)
-  if ([...s].some(v => FACE_PROCS.has(v)))   cards.push(TESTIMONIAL_DATA.face)
-  return cards.length ? cards : [TESTIMONIAL_DATA.other]
+  if ([...s].some(v => BREAST_PROCS.has(v))) {
+    cards.push(TESTIMONIALS.breast1)
+    cards.push(TESTIMONIALS.breast2)
+  }
+  if ([...s].some(v => BODY_PROCS.has(v))) cards.push(TESTIMONIALS.body)
+  if ([...s].some(v => FACE_PROCS.has(v))) cards.push(TESTIMONIALS.face)
+  return cards.length ? cards : [TESTIMONIALS.other]
 }
 
 // ── Testimonial card ──────────────────────────────────────────────────────────
-function TestimonialCard({ placeholder, quote }) {
+function TestimonialCard({ imageUrl, quote }) {
   return (
     <div className="testimonial-card">
-      <div className="testimonial-card__placeholder">
-        <div className="testimonial-card__placeholder-inner">
-          <span className="testimonial-card__placeholder-label">{placeholder}</span>
-          <span className="testimonial-card__placeholder-note">Photo coming soon</span>
-        </div>
-      </div>
+      <img
+        src={imageUrl}
+        alt=""
+        className="testimonial-card__image"
+        loading="lazy"
+      />
       <div className="testimonial-card__body">
         <p className="testimonial-card__quote">"{quote}"</p>
         <p className="testimonial-card__attribution">Verified CPSC Patient</p>
@@ -164,7 +172,7 @@ export default function NextStep({ answers }) {
       <div className="next-step__testimonials">
         <div className="next-step__testimonials-rule" />
         <p className="next-step__testimonials-label">From patients like you</p>
-        <div className={`next-step__testimonials-grid next-step__testimonials-grid--${testimonialCards.length}`}>
+        <div className="next-step__testimonials-grid">
           {testimonialCards.map((card, i) => (
             <TestimonialCard key={i} {...card} />
           ))}
