@@ -50,55 +50,38 @@ const BREAST_PROCS = new Set(['breast_aug', 'breast_lift', 'breast_reduction', '
 const BODY_PROCS   = new Set(['tummy_tuck', 'lipo', 'mommy', 'body_lift', 'bbl'])
 const FACE_PROCS   = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
 
-const SOCIAL_PROOF = {
-  breast1: {
+const TESTIMONIALS = {
+  breast: {
     imageUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=400&fit=crop&crop=face',
-    quote: "I made my decision based on research and interviews with three surgeons. By doing this my choice was easy — I had the most confidence in the whole team supporting me.",
-    attribution: '— Verified CPSC Patient, Breast Lift',
+    quote: "I finally feel like myself. The whole experience felt considered — not rushed.",
+    attribution: '— Breast Augmentation Patient',
   },
-  breast2: {
-    imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop&crop=face',
-    quote: "My results are fabulous, and they have emotionally transformed my life.",
-    attribution: '— Rose R., Denver CO · Verified CPSC Patient',
-  },
-  body1: {
+  body: {
     imageUrl: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=400&fit=crop&crop=face',
-    quote: "He was attentive to my concerns and addressed all my questions about my tummy tuck. He made me feel comfortable and heard.",
-    attribution: '— Verified CPSC Patient, Tummy Tuck',
-  },
-  body2: {
-    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop&crop=face',
-    quote: "Words cannot describe how amazed I am at my results. I am so thankful for the top notch care I received.",
-    attribution: '— Verified CPSC Patient, Body Procedures',
+    quote: "I told myself I'd think about it for another year. I wish I hadn't waited.",
+    attribution: '— Body Contouring Patient',
   },
   face: {
     imageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&h=400&fit=crop&crop=face',
-    quote: "I spent months researching and couldn't be happier I came here. Absolutely stellar results and exceptional care.",
-    attribution: '— Verified CPSC Patient',
+    quote: "Everyone asks if I've been on vacation. I just look rested.",
+    attribution: '— Facial Rejuvenation Patient',
   },
-  all: {
+  fallback: {
     imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&h=400&fit=crop&crop=face',
-    quote: "Rarely have I seen such collaboration in any doctor's office. It's clear this practice has built a culture where patient well-being is a cornerstone. Nothing short of a transformative experience.",
-    attribution: '— Verified CPSC Patient',
+    quote: "From my first call to the final follow-up — I always felt taken care of.",
+    attribution: '— CPSC Patient',
   },
 }
 
+// 1 procedure → 1 matching card. Multiple / unknown → fallback card. Max 2.
 function getSocialProofCards(proceduresSelected = []) {
-  const s = new Set(proceduresSelected)
-  const cards = []
-  if ([...s].some(v => BREAST_PROCS.has(v))) {
-    cards.push(SOCIAL_PROOF.breast1)
-    cards.push(SOCIAL_PROOF.breast2)
+  if (proceduresSelected.length === 1) {
+    const v = proceduresSelected[0]
+    if (BREAST_PROCS.has(v)) return [TESTIMONIALS.breast]
+    if (BODY_PROCS.has(v))   return [TESTIMONIALS.body]
+    if (FACE_PROCS.has(v))   return [TESTIMONIALS.face]
   }
-  if ([...s].some(v => BODY_PROCS.has(v))) {
-    cards.push(SOCIAL_PROOF.body1)
-    cards.push(SOCIAL_PROOF.body2)
-  }
-  if ([...s].some(v => FACE_PROCS.has(v))) {
-    cards.push(SOCIAL_PROOF.face)
-  }
-  cards.push(SOCIAL_PROOF.all) // always shown last
-  return cards
+  return [TESTIMONIALS.fallback]
 }
 
 function SocialProofCard({ imageUrl, quote, attribution }) {
@@ -289,18 +272,26 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
       </button>
 
       {/* ── Social proof ── */}
-      <div
-        className="estimate__social-proof"
-        style={{ animationDelay: `${ctaDelay + 0.25}s` }}
-      >
-        <div className="estimate__rule estimate__rule--inner estimate__social-proof-rule" />
-        <p className="estimate__social-proof-label">From patients like you</p>
-        <div className="estimate__testimonials-scroll">
-          {getSocialProofCards(proceduresSelected).map((card, i) => (
-            <SocialProofCard key={i} {...card} />
-          ))}
-        </div>
-      </div>
+      {(() => {
+        const cards = getSocialProofCards(proceduresSelected)
+        return (
+          <div
+            className="estimate__social-proof"
+            style={{ animationDelay: `${ctaDelay + 0.25}s` }}
+          >
+            <div className="estimate__rule estimate__rule--inner estimate__social-proof-rule" />
+            <p className="estimate__social-proof-label">From patients like you</p>
+            <div
+              className="estimate__testimonials-scroll"
+              style={cards.length === 1 ? { justifyContent: 'center' } : undefined}
+            >
+              {cards.map((card, i) => (
+                <SocialProofCard key={i} {...card} />
+              ))}
+            </div>
+          </div>
+        )
+      })()}
 
     </div>
   )

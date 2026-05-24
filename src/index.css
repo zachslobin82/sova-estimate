@@ -1196,14 +1196,15 @@ body {
   margin: 1.25rem 0 1rem;
 }
 
-/* Scrollable row — breaks out of screen padding so cards bleed to edge */
+/* Scrollable row */
 .estimate__testimonials-scroll {
   display: flex;
+  flex-direction: row;
   overflow-x: auto;
   overflow-y: hidden;
   gap: 16px;
-  padding: 0 24px 16px;
-  margin: 0 calc(-1 * var(--pad-x));
+  padding: 0 32px 24px 32px;
+  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -1212,50 +1213,47 @@ body {
   display: none;
 }
 
-/* Individual card — fixed size, no shrink so horizontal scroll works */
+/* Individual card */
 .estimate__testimonial-card {
-  flex-shrink: 0;
-  width: 260px;
-  height: 320px;
-  background: #ffffff;
-  border: 1px solid rgba(28, 26, 24, 0.1);
+  flex: 0 0 auto;
+  width: 220px;
+  scroll-snap-align: start;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+  background: #fff;
+  border: 1px solid #E8E2DA;
+  display: flex;
+  flex-direction: column;
 }
 
 .estimate__testimonial-card__image {
   width: 100%;
-  height: 100%;
+  height: 200px;
   object-fit: cover;
   object-position: top;
   display: block;
+  flex-shrink: 0;
 }
 
 .estimate__testimonial-card__body {
-  padding: 12px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 8px;
 }
 
 .estimate__testimonial-card__quote {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 300;
   font-size: 13px;
-  line-height: 1.6;
-  color: #1C1A18;
+  line-height: 1.55;
+  color: #3A3530;
+  font-style: italic;
   margin: 0;
 }
 
 .estimate__testimonial-card__attribution {
-  font-family: var(--font-body);
   font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  color: #9A9390;
+  letter-spacing: 0.04em;
   margin: 0;
 }
 
