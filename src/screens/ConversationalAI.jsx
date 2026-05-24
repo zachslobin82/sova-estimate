@@ -406,7 +406,7 @@ export default function ConversationalAI({
         <div className="convo-ai__phase1">
 
           <h2 className="screen__headline">
-            What's still on your mind?
+            What brings you here?
           </h2>
 
           <p className="convo-ai__fixed-sub">
@@ -475,7 +475,7 @@ export default function ConversationalAI({
         // ── Phase 2: live chat ────────────────────────────────────────────
         <>
           <h2 className="screen__headline">
-            What's still on your mind?
+            What brings you here?
           </h2>
 
           <div className="convo-ai__chat">
