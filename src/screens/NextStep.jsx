@@ -1,7 +1,59 @@
 import { useState, useEffect } from 'react'
 
+// ── Testimonial category sets ─────────────────────────────────────────────────
+const BREAST_PROCS = new Set(['breast_aug', 'breast_lift', 'breast_reduction', 'breast_revision'])
+const BODY_PROCS   = new Set(['tummy_tuck', 'lipo', 'mommy', 'body_lift', 'bbl'])
+const FACE_PROCS   = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
+
+const TESTIMONIAL_DATA = {
+  breast: {
+    placeholder: 'Before & After — Breast Augmentation',
+    quote: "I couldn't be happier with my results. Dr. Slenkovich and the entire team made me feel comfortable and heard every step of the way.",
+  },
+  body: {
+    placeholder: 'Before & After — Tummy Tuck',
+    quote: "From the first visit, Dr. Slenkovich was attentive to my concerns and addressed all my questions. He made me feel comfortable and cared for throughout the entire process.",
+  },
+  face: {
+    placeholder: 'Before & After — Facelift',
+    quote: "The results look completely natural. I look like myself again — just refreshed. The care and attention I received at CPSC was unlike anything I expected.",
+  },
+  other: {
+    placeholder: 'Before & After — Results',
+    quote: "The team at CPSC treated me like family from the beginning. I felt I was in great hands throughout the entire experience.",
+  },
+}
+
+function getTestimonialCards(proceduresSelected = []) {
+  const s = new Set(proceduresSelected)
+  const cards = []
+  if ([...s].some(v => BREAST_PROCS.has(v))) cards.push(TESTIMONIAL_DATA.breast)
+  if ([...s].some(v => BODY_PROCS.has(v)))   cards.push(TESTIMONIAL_DATA.body)
+  if ([...s].some(v => FACE_PROCS.has(v)))   cards.push(TESTIMONIAL_DATA.face)
+  return cards.length ? cards : [TESTIMONIAL_DATA.other]
+}
+
+// ── Testimonial card ──────────────────────────────────────────────────────────
+function TestimonialCard({ placeholder, quote }) {
+  return (
+    <div className="testimonial-card">
+      <div className="testimonial-card__placeholder">
+        <div className="testimonial-card__placeholder-inner">
+          <span className="testimonial-card__placeholder-label">{placeholder}</span>
+          <span className="testimonial-card__placeholder-note">Photo coming soon</span>
+        </div>
+      </div>
+      <div className="testimonial-card__body">
+        <p className="testimonial-card__quote">"{quote}"</p>
+        <p className="testimonial-card__attribution">Verified CPSC Patient</p>
+      </div>
+    </div>
+  )
+}
+
+// ── Screen ────────────────────────────────────────────────────────────────────
 export default function NextStep({ answers }) {
-  const { priorityScore } = answers
+  const { priorityScore, proceduresSelected = [] } = answers
 
   // Question expander state — Score 1/2 only
   const [questionOpen, setQuestionOpen] = useState(false)
@@ -32,6 +84,8 @@ export default function NextStep({ answers }) {
     setQuestionSent(true)
     setQuestionOpen(false)
   }
+
+  const testimonialCards = getTestimonialCards(proceduresSelected)
 
   return (
     <div className="screen next-step">
@@ -105,6 +159,18 @@ export default function NextStep({ answers }) {
         )}
 
       </div>
+
+      {/* ── Testimonials — shown to all patients ── */}
+      <div className="next-step__testimonials">
+        <div className="next-step__testimonials-rule" />
+        <p className="next-step__testimonials-label">From patients like you</p>
+        <div className={`next-step__testimonials-grid next-step__testimonials-grid--${testimonialCards.length}`}>
+          {testimonialCards.map((card, i) => (
+            <TestimonialCard key={i} {...card} />
+          ))}
+        </div>
+      </div>
+
     </div>
   )
 }
