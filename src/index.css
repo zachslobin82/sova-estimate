@@ -1,0 +1,1602 @@
+/* ── Design Tokens ── */
+:root {
+  --bg: #FFFFFF;
+  --text: #1C1A18;
+  --accent: #1a2742;
+  --accent-light: rgba(26, 39, 66, 0.05);
+  --accent-mid: rgba(26, 39, 66, 0.15);
+  --gold: #B8975A;
+  --muted: #6B6560;
+  --border: rgba(26, 39, 66, 0.15);
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  --screen-max: 600px;
+  --pad-x: 2rem;
+  --pad-y: 1.5rem;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ──────────────────────────────────────
+   CPSC Header Bar
+────────────────────────────────────── */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 44px;
+  background: #1a2742;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.app-header__name {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+/* ── App Shell ── */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 46px; /* 44px header + 2px progress bar */
+}
+
+/* ──────────────────────────────────────
+   Progress Bar — 2px gold line at top
+────────────────────────────────────── */
+.progress-track {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(26, 39, 66, 0.1);
+  z-index: 150;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Screen Wrapper ── */
+.screen {
+  position: relative;
+  width: 100%;
+  max-width: var(--screen-max);
+  padding: calc(var(--pad-y) * 4) var(--pad-x) calc(var(--pad-y) * 2.5);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 46px);
+}
+
+/* ──────────────────────────────────────
+   Keyframe Animations
+────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes goldSweep {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ──────────────────────────────────────
+   Screen 0: Welcome — centered layout
+────────────────────────────────────── */
+.welcome {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Practice name */
+.welcome__practice {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.05s;
+}
+
+/* Ornament: line ◆ line */
+.welcome__ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 180px;
+  margin-bottom: 1.75rem;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.12s;
+}
+
+.welcome__ornament-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(26, 39, 66, 0.25);
+  max-width: 72px;
+}
+
+.welcome__ornament-diamond {
+  font-size: 0.55rem;
+  color: var(--accent);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Headline */
+.welcome__headline {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 2.7rem);
+  font-weight: 300;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.65s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Body */
+.welcome__body {
+  font-size: 0.93rem;
+  line-height: 1.8;
+  color: var(--text);
+  opacity: 0;
+  max-width: 42ch;
+  margin-bottom: 2rem;
+
+  animation: fadeUp 0.65s ease forwards;
+  animation-delay: 0.32s;
+}
+
+/* Disclaimer */
+.welcome__disclaimer {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 40ch;
+  margin-bottom: 2.75rem;
+
+  opacity: 0;
+  animation: fadeUp 0.65s ease forwards;
+  animation-delay: 0.42s;
+}
+
+/* CTA */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: opacity 0.2s;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.54s;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0.35);
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.btn-primary:hover {
+  opacity: 0.7;
+}
+
+/* ──────────────────────────────────────
+   Back button — Screen 1 & 2
+────────────────────────────────────── */
+.btn-back {
+  position: absolute;
+  top: 2rem;
+  left: var(--pad-x);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  animation-delay: 0.05s;
+}
+
+.btn-back:hover {
+  color: var(--accent);
+}
+
+/* ──────────────────────────────────────
+   Shared question screen styles
+────────────────────────────────────── */
+.readiness,
+.motivation,
+.own-words,
+.convo-ai,
+.procedure-selection,
+.timing,
+.financial-readiness,
+.surgeon-preference {
+  justify-content: flex-start;
+  padding-top: calc(var(--pad-y) * 5);
+}
+
+/* Centered question headline */
+.screen__headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 5vw, 2.15rem);
+  font-weight: 300;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.05s;
+}
+
+/* Instruction line (e.g. "Select all that feel true.") */
+.screen__subtext {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4A4743;
+  text-align: center;
+  margin-bottom: 1.75rem;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.1s;
+}
+
+/* Reassurance line — e.g. "All answers are welcome here." */
+.screen__reassurance {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.55s;
+}
+
+/* ── Option Cards ── */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+.option-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem 1.3rem;
+
+  /* Default: thin all-around gold border */
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 3px;
+
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text);
+
+  transition: background 0.2s ease, border-color 0.2s ease, border-left-color 0.2s ease;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+}
+
+/* animation-delay is set per-card via inline style in JSX */
+
+.option-card:hover:not(.option-card--selected) {
+  background: var(--accent-light);
+  border-color: rgba(26, 39, 66, 0.3);
+  border-left-color: rgba(26, 39, 66, 0.3);
+}
+
+/* Selected state: navy left accent + tinted background */
+.option-card--selected {
+  border-color: var(--border);
+  border-left-color: var(--accent);
+  background: rgba(26, 39, 66, 0.06);
+}
+
+/* Navy shimmer sweep on selection */
+.option-card--selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(26, 39, 66, 0.06) 50%,
+    transparent 80%
+  );
+  background-size: 300% 100%;
+  animation: goldSweep 0.6s ease forwards;
+  pointer-events: none;
+}
+
+/* ── Continue Button ── */
+.btn-continue-wrap {
+  /* reserve height so layout never jumps on appearance */
+  min-height: 2rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+.btn-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+
+  /* Hidden until selection — fade + drift up */
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Understated underline — same as .btn-primary */
+.btn-continue::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.btn-continue--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.btn-continue--visible:hover {
+  opacity: 0.7;
+}
+
+.btn-continue--visible:hover::after {
+  transform: scaleX(1);
+}
+
+/* ──────────────────────────────────────
+   Screen 3: Chip / Pill Selectors
+────────────────────────────────────── */
+.chip-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+}
+
+/* One category group (label + row of chips) */
+.chip-section {
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+}
+
+/* Category label — matches .screen__subtext style */
+.chip-category {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.65rem;
+}
+
+/* Wrapping row of chips */
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Individual chip / pill */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.42rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--text);
+  white-space: nowrap;
+
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+
+  /* Each chip animates with its parent section via the section's delay */
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.chip:hover:not(.chip--selected) {
+  background: rgba(26, 39, 66, 0.04);
+  border-color: rgba(26, 39, 66, 0.3);
+}
+
+/* Selected: full navy border + tint (no left-only — pills look best with all-around) */
+.chip--selected {
+  border-color: var(--accent);
+  background: rgba(26, 39, 66, 0.06);
+  color: var(--text);
+}
+
+/* ──────────────────────────────────────
+   Screen 6: Lead Capture Form
+────────────────────────────────────── */
+.lead-capture {
+  justify-content: flex-start;
+  padding-top: calc(var(--pad-y) * 5);
+}
+
+/* Two-column grid: first/last in one row, email/phone full-width */
+.lead-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.25rem;
+  row-gap: 1.75rem;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* Individual field wrapper */
+.lead-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+}
+
+.lead-form__field--full {
+  grid-column: 1 / -1;
+}
+
+/* Small uppercase label */
+.lead-form__label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4A4743;
+  transition: color 0.2s;
+}
+
+/* Underline-only input */
+.lead-form__input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.45rem 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.22s ease;
+  -webkit-appearance: none;
+}
+
+.lead-form__input::placeholder {
+  color: transparent;
+}
+
+/* Gold underline + label highlight on focus */
+.lead-form__field:focus-within .lead-form__label {
+  color: var(--accent);
+}
+
+.lead-form__input:focus {
+  border-bottom-color: var(--accent);
+}
+
+/* Consent checkbox row */
+.lead-form__consent {
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+}
+
+.lead-form__consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.lead-form__checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  min-width: 13px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  margin-top: 1px;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.lead-form__checkbox:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.lead-form__checkbox:checked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23FFFFFF' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 8px 7px;
+}
+
+.lead-form__consent-text {
+  font-size: 0.68rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* CTA row */
+.lead-form__cta {
+  padding-top: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+}
+
+/* Submit button — always visible, active/inactive states */
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: relative;
+  transition: color 0.3s ease, opacity 0.3s ease;
+
+  /* Disabled — muted and non-interactive */
+  color: var(--muted);
+  cursor: default;
+  pointer-events: none;
+}
+
+.btn-submit::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0.35);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+/* Active — gold, interactive */
+.btn-submit--active {
+  color: var(--accent);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.btn-submit--active:hover {
+  opacity: 0.7;
+}
+
+.btn-submit--active:hover::after {
+  transform: scaleX(1);
+}
+
+/* ──────────────────────────────────────
+   Generating estimate — interstitial
+────────────────────────────────────── */
+.estimate-interstitial {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+}
+
+.estimate-interstitial__ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 160px;
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeIn 0.6s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.estimate-interstitial__orn-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(26, 39, 66, 0.25);
+}
+
+.estimate-interstitial__orn-diamond {
+  font-size: 0.55rem;
+  color: var(--accent);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.estimate-interstitial__text {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 3.5vw, 1.35rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  margin-bottom: 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* ──────────────────────────────────────
+   Screen 7: Investment Estimate
+────────────────────────────────────── */
+.estimate {
+  align-items: center;
+  text-align: center;
+  justify-content: flex-start;
+  padding-top: calc(var(--pad-y) * 5);
+}
+
+/* Headline */
+.estimate__headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5.5vw, 2.4rem);
+  font-weight: 300;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.75rem;
+  max-width: 30ch;
+
+  opacity: 0;
+  animation: fadeUp 0.65s ease forwards;
+  animation-delay: 0.08s;
+}
+
+/* ── Context / AI paragraph area ── */
+.estimate__context {
+  margin-bottom: 2rem;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.18s;
+}
+
+.estimate__context-text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.75;
+  color: #1C1A18;
+  max-width: 46ch;
+
+  animation: fadeIn 0.55s ease forwards;
+}
+
+/* ── Loading dots ── */
+@keyframes dotPulse {
+  0%, 70%, 100% { opacity: 0.15; transform: scale(0.85); }
+  35%            { opacity: 0.75; transform: scale(1);    }
+}
+
+.loading-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0;
+}
+
+.loading-dots span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ── Price ranges block ── */
+.estimate__ranges {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.estimate__rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  width: 100%;
+}
+
+.estimate__rule--inner {
+  margin: 0;
+}
+
+.estimate__range-row {
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.estimate__range-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.85rem var(--pad-x);
+}
+
+.estimate__range-name {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.estimate__range-sep {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.estimate__range-price {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* ── Total investment row ── */
+.estimate__total-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 1rem var(--pad-x) 0.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.estimate__total-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.estimate__total-price {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.estimate__rule--total {
+  margin-top: 0.75rem;
+}
+
+/* ── Disclaimer ── */
+.estimate__disclaimer-wrap {
+  width: 100%;
+  margin-bottom: 0.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.28s;
+}
+
+.estimate__rule--disclaimer {
+  margin-bottom: 1rem;
+}
+
+.estimate__disclaimer {
+  font-family: var(--font-body);
+  font-size: 0.75rem;           /* 12px */
+  font-weight: 300;
+  line-height: 1.75;
+  color: #6B6560;
+  text-align: center;
+  max-width: 52ch;
+  margin: 0 auto;
+}
+
+
+/* ── Score 3: Calendly booking section ── */
+.estimate__booking {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.estimate__booking-label {
+  font-family: var(--font-body);
+  font-size: 0.63rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0.9rem 0 0.5rem;
+}
+
+.estimate__booking-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid #1C1A18;
+  border-radius: 0;
+  padding: 0.7rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: #1C1A18;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.estimate__booking-btn:hover {
+  background: #1a2742;
+  border-color: #1a2742;
+  color: #ffffff;
+}
+
+.estimate__booking-alt {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--muted);
+  margin-top: 0.75rem;
+  line-height: 1.6;
+}
+
+/* ── Confirmation line ── */
+.estimate__confirmation {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.01em;
+  margin-bottom: 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+/* ── Inline question expander ── */
+.estimate__question {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 3rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.18s;
+}
+
+.estimate__question-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.estimate__question-toggle:hover {
+  color: var(--text);
+}
+
+.estimate__question-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  text-align: left;
+}
+
+.estimate__question-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.4rem 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text);
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.estimate__question-textarea::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.estimate__question-textarea:focus {
+  border-bottom-color: var(--accent);
+}
+
+.estimate__question-send {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 0.35rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.estimate__question-send:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.estimate__question-send:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.estimate__question-confirm {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--muted);
+  margin: 0;
+}
+
+
+/* ── Screen 9: Next Step — terminal handoff ──────────────────────────────── */
+.next-step {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+}
+
+.next-step__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 38ch;
+}
+
+.next-step__tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3.8vw, 1.55rem);
+  font-weight: 300;
+  font-style: italic;
+  color: #4A4743;
+  line-height: 1.4;
+
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.next-step__alt {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.65;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.35s;
+}
+
+/* ── Financing follow-up question (Screen 6) ────────────────────────────── */
+
+.financing-question {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+
+  opacity: 0;
+  animation: fadeUp 0.45s ease forwards;
+}
+
+.financing-question__label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+.financing-question__headline {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.35;
+  color: var(--text);
+  margin: 0 0 1.25rem;
+}
+
+.financing-question__options {
+  margin-top: 0;
+}
+
+/* ── Own Words (Screen 3) ─────────────────────────────────────────────────── */
+
+.own-words__subtext {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #4A4743;
+  line-height: 1.65;
+  text-align: center;
+  max-width: 40ch;
+  margin: -0.75rem 0 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.12s;
+}
+
+.own-words__field {
+  width: 100%;
+  margin-bottom: 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.own-words__textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.5rem 0;
+  min-height: 120px;
+  width: 100%;
+  resize: vertical;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.22s;
+}
+
+.own-words__textarea::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.own-words__textarea:focus {
+  border-bottom-color: var(--accent);
+}
+
+.own-words__interim {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  min-height: 1.2em;
+}
+
+.own-words__controls {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Mic button */
+.own-words__mic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.own-words__mic:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.own-words__mic--recording {
+  border-color: var(--accent);
+  color: var(--accent);
+  animation: micPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(26, 39, 66, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(26, 39, 66, 0.15); }
+}
+
+/* Skip link */
+.own-words__skip {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.own-words__skip:hover {
+  color: var(--text);
+}
+
+/* ── Conversational AI Screen (Screen 4) ─────────────────────────────────── */
+
+/* Procedure affirmation — italic Cormorant line above the headline */
+.convo-ai__affirmation {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1rem;
+  color: #4A4743;
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.55;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+  animation-delay: 0.05s;
+}
+
+/* Fixed instructional subheadline below the headline */
+.convo-ai__fixed-sub {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #4A4743;
+  text-align: center;
+  line-height: 1.65;
+  margin: -0.5rem 0 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+/* AI disclaimer below subheadline */
+.convo-ai__ai-disclaimer {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-style: italic;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.55;
+  margin: -0.5rem 0 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.12s;
+}
+
+/* Phase 1 wrapper — stretches all children to the same edges */
+.convo-ai__phase1 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Procedure subheadline */
+.convo-ai__sub {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #4A4743;
+  line-height: 1.65;
+  text-align: center;
+  margin: -0.5rem 0 1.5rem;
+
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+  animation-delay: 0.12s;
+}
+
+/* Initial textarea wrapper */
+.convo-ai__initial-field {
+  margin-bottom: 1.25rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.15s;
+}
+
+/* ── Chat container ── */
+.convo-ai__chat {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Bubble wrapper — controls alignment */
+.convo-ai__bubble-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.convo-ai__bubble-wrap--user {
+  align-items: flex-end;
+}
+
+.convo-ai__bubble-wrap--assistant {
+  align-items: flex-start;
+}
+
+/* Practice label above first AI bubble */
+.convo-ai__practice-label {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+  opacity: 0.7;
+}
+
+/* Base bubble */
+.convo-ai__bubble {
+  padding: 0.75rem 1rem;
+  max-width: 82%;
+  line-height: 1.65;
+
+  opacity: 0;
+  animation: fadeUp 0.45s ease forwards;
+}
+
+.convo-ai__bubble p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: #1C1A18;
+}
+
+/* Patient bubble — right, light navy tint */
+.convo-ai__bubble--user {
+  background: #EEF0F4;
+  border-radius: 12px 12px 2px 12px;
+}
+
+/* AI bubble — left, white with navy border */
+.convo-ai__bubble--assistant {
+  background: #ffffff;
+  border: 1px solid rgba(26, 39, 66, 0.15);
+  border-radius: 12px 12px 12px 2px;
+}
+
+/* Typing indicator bubble */
+.convo-ai__bubble--typing {
+  padding: 0.6rem 1rem;
+}
+
+.convo-ai__bubble--typing .loading-dots {
+  padding: 0;
+  justify-content: flex-start;
+}
+
+/* CTA button */
+.convo-ai__cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.convo-ai__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1px solid #1C1A18;
+  border-radius: 0;
+  padding: 0.7rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: #1C1A18;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.convo-ai__cta:hover {
+  background: #1a2742;
+  border-color: #1a2742;
+  color: #ffffff;
+}
+
+.convo-ai__cta-sub {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #6B6560;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ── Reply input row ── */
+.convo-ai__reply {
+  width: 100%;
+  padding-bottom: 2rem;
+}
+
+.convo-ai__reply-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.35rem;
+  transition: border-color 0.2s;
+}
+
+.convo-ai__reply-row:focus-within {
+  border-bottom-color: var(--accent);
+}
+
+.convo-ai__reply-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+}
+
+.convo-ai__reply-input::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Send button */
+.convo-ai__send {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.convo-ai__send:hover:not(:disabled) {
+  color: var(--accent);
+}
+
+.convo-ai__send:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Textarea fills its container without horizontal overflow */
+.convo-ai__phase1 .own-words__textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Controls row and continue button centered within the wrapper */
+.convo-ai__phase1 .own-words__controls {
+  justify-content: center;
+}
+
+.convo-ai__phase1 .btn-continue-wrap {
+  justify-content: center;
+}
