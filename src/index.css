@@ -960,7 +960,7 @@ body {
   line-height: 1.75;
   color: #6B6560;
   text-align: left;
-  max-width: 52ch;
+  max-width: 100%;
   margin: 0;
 }
 
