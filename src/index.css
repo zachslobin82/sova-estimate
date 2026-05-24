@@ -1653,6 +1653,15 @@ body {
   margin-top: 0.5rem;
 }
 
+/* Phase 1 inline input row — same row as chat replies, with entry animation */
+.convo-ai__reply-row--phase1 {
+  margin-bottom: 0.75rem;
+
+  opacity: 0;
+  animation: fadeUp 0.55s ease forwards;
+  animation-delay: 0.15s;
+}
+
 /* ── Reply input row ── */
 .convo-ai__reply {
   width: 100%;
@@ -1713,17 +1722,3 @@ body {
   cursor: default;
 }
 
-/* Textarea fills its container without horizontal overflow */
-.convo-ai__phase1 .own-words__textarea {
-  box-sizing: border-box;
-  width: 100%;
-}
-
-/* Controls row and continue button centered within the wrapper */
-.convo-ai__phase1 .own-words__controls {
-  justify-content: center;
-}
-
-.convo-ai__phase1 .btn-continue-wrap {
-  justify-content: center;
-}

@@ -380,21 +380,25 @@ export default function ConversationalAI({
             <p className="convo-ai__sub">{subheadline}</p>
           )}
 
-          <div className="convo-ai__initial-field">
-            <textarea
-              className="own-words__textarea"
+          {isRecording && interimText && (
+            <p className="own-words__interim" aria-live="polite">{interimText}</p>
+          )}
+
+          <div className="convo-ai__reply-row convo-ai__reply-row--phase1">
+            <input
+              type="text"
+              className="convo-ai__reply-input"
               value={inputText}
               onChange={e => setInputText(e.target.value)}
-              placeholder="Type here, or use your voice below."
-              rows={5}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  handleBegin()
+                }
+              }}
+              placeholder="Share what's on your mind…"
               aria-label="Share anything on your mind"
             />
-            {isRecording && interimText && (
-              <p className="own-words__interim" aria-live="polite">{interimText}</p>
-            )}
-          </div>
-
-          <div className="own-words__controls">
             {speechAvailable && (
               <button
                 type="button"
@@ -403,24 +407,22 @@ export default function ConversationalAI({
                 aria-label={isRecording ? 'Stop recording' : 'Dictate with microphone'}
               >
                 <MicIcon />
-                <span>{isRecording ? 'Listening…' : 'Tap to speak'}</span>
               </button>
             )}
+            <button
+              type="button"
+              className="convo-ai__send"
+              onClick={handleBegin}
+              disabled={!inputText.trim()}
+              aria-label="Send"
+            >
+              Send
+            </button>
           </div>
 
           <p className="convo-ai__ai-disclaimer">
             This conversation is powered by AI. A member of our care team will follow up personally.
           </p>
-
-          <div className="btn-continue-wrap">
-            <button
-              type="button"
-              className={`btn-continue${inputText.trim() ? ' btn-continue--visible' : ''}`}
-              onClick={handleBegin}
-            >
-              Continue →
-            </button>
-          </div>
 
         </div>
 
