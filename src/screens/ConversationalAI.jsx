@@ -18,7 +18,6 @@ function MicIcon() {
   )
 }
 
-// ── Context label maps (match Estimate.jsx) ──────────────────────────────────
 const READINESS_LABELS = {
   high:   'seriously considering moving forward',
   medium: 'thoughtfully exploring their options',
@@ -38,7 +37,6 @@ const FINANCIAL_LABELS = {
   funds_ready:        'has funds ready and is focused on finding the right doctor',
 }
 
-// ── Dynamic procedure subheadline ────────────────────────────────────────────
 function buildSubheadline(labels) {
   if (!labels.length) return null
   const suffix = ' You can also ask any questions — we\'re here to help.'
@@ -51,7 +49,6 @@ function buildSubheadline(labels) {
   return `Tell us more about what you hope to achieve with your ${allButLast.join(', ')}, and ${last}.${suffix}`
 }
 
-// ── Static procedure affirmation ─────────────────────────────────────────────
 const FACE_PROCS = new Set(['facelift', 'neck_lift', 'eyelid', 'brow_lift', 'rhinoplasty'])
 
 const SINGLE_AFFIRMATIONS = {
@@ -75,11 +72,7 @@ const SINGLE_AFFIRMATIONS = {
 function buildAffirmation(selected) {
   if (!selected || !selected.length) return null
   const s = new Set(selected)
-
-  // Single procedure
   if (selected.length === 1) return SINGLE_AFFIRMATIONS[selected[0]] || null
-
-  // Multi-procedure — priority order matches spec
   if (s.has('breast_aug') && s.has('tummy_tuck'))
     return "Breast augmentation and a tummy tuck together is one of the most popular combinations we see — many patients prefer handling both in a single recovery rather than going through it twice."
   if (s.has('breast_aug') && s.has('breast_lift'))
@@ -92,39 +85,23 @@ function buildAffirmation(selected) {
     return "Combining facial procedures is something we approach thoughtfully — when done together strategically, the results are more harmonious and recovery is consolidated."
   if (selected.length >= 3)
     return "Considering multiple procedures together is something our team plans carefully — the goal is always to maximize results while keeping recovery as streamlined as possible."
-
   return "The combination you're exploring is one our team works with regularly — and the results, planned well, can be genuinely remarkable."
 }
 
-// ── Immediate-skip triggers — no API call, show CTA right away ───────────────
 const SKIP_TRIGGERS = new Set([
-  'estimate',
-  'my estimate',
-  'see estimate',
-  'get estimate',
-  'ready',
-  "i'm ready",
-  "let's go",
-  'go',
-  'next',
-  'continue',
-  'skip',
-  'move on',
-  'done',
-  'no questions',
-  'no more questions',
+  'estimate', 'my estimate', 'see estimate', 'get estimate', 'ready',
+  "i'm ready", "let's go", 'go', 'next', 'continue', 'skip',
+  'move on', 'done', 'no questions', 'no more questions',
 ])
 
 function isSkipTrigger(text) {
   return SKIP_TRIGGERS.has(text.trim().toLowerCase())
 }
 
-// ── Fallback response (no API key / error) ───────────────────────────────────
 const FALLBACK_RESPONSE =
   "What you've shared gives us a much clearer picture of what matters to you. " +
   "We'd love to put together a personalized estimate based on everything you've told us."
 
-// ── Component ────────────────────────────────────────────────────────────────
 export default function ConversationalAI({
   answers,
   onConversationChange,
@@ -145,17 +122,12 @@ export default function ConversationalAI({
   const allProcedures = proceduresSelected.map(v => PROCEDURE_MAP[v]).filter(Boolean)
   const subheadline   = buildSubheadline(allProcedures.map(p => p.label))
 
-  // Input state
   const [inputText,    setInputText]    = useState(answers.patientOwnWords || '')
   const [followUpText, setFollowUpText] = useState('')
-
-  // Chat state
   const [isStarted, setIsStarted] = useState(false)
   const [messages,  setMessages]  = useState([])
   const [isTyping,  setIsTyping]  = useState(false)
   const [showCTA,   setShowCTA]   = useState(false)
-
-  // Voice state
   const [isRecording,     setIsRecording]     = useState(false)
   const [interimText,     setInterimText]     = useState('')
   const [speechAvailable, setSpeechAvailable] = useState(false)
@@ -167,12 +139,10 @@ export default function ConversationalAI({
     return () => recognitionRef.current?.abort()
   }, [])
 
-  // Auto-scroll to bottom of chat after each update
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [messages, isTyping, showCTA])
 
-  // ── System prompt ──────────────────────────────────────────────────────────
   function buildSystemPrompt() {
     return [
       "CRITICAL CONSTRAINT: Your entire response must be 60 words or fewer. Count your words. If you exceed 60 words, cut ruthlessly. Every word must earn its place.",
@@ -189,55 +159,44 @@ export default function ConversationalAI({
       `- Surgeon recommendation: ${surgeonRecommendation || 'not yet determined'}`,
       "",
       "YOUR FIRST RESPONSE MUST follow this exact structure:",
-      "1. Affirm their procedure selection(s) specifically and confidently — reference the actual procedures by name. If they selected multiple procedures, acknowledge the combination and briefly note why it makes sense (e.g. single recovery period, complementary results). Do this even if they mentioned their procedures in their opening message — it should feel like confident validation, not repetition.",
-      "2. Reflect something specific from what they personally shared — show you actually read their words, not a generic acknowledgment.",
-      "3. Provide one brief piece of relevant education — something that builds trust and shows expertise. Match it to what they shared: if they mentioned recovery concerns, speak to timeline with confidence; if they mentioned wanting natural results, speak to what that means in practice; if they mentioned timing, speak to what planning looks like. Be confident and knowledgeable but warm — not clinical.",
+      "1. Affirm their procedure selection(s) specifically and confidently — reference the actual procedures by name.",
+      "2. Reflect something specific from what they personally shared.",
+      "3. Provide one brief piece of relevant education.",
       "4. Ask exactly one intelligent follow-up question based on what they shared.",
       "",
       "SUBSEQUENT RESPONSES:",
       "- Continue addressing what they share directly and specifically",
-      "- Answer questions with confident, knowledgeable warmth — blend of authority and care",
-      "- Gently surface and address any fears or hesitations",
+      "- Answer questions with confident, knowledgeable warmth",
       "- Ask one follow-up question per response maximum",
-      "- After 2-3 exchanges, or when you sense readiness, transition naturally — include the exact phrase 'personalized estimate' in your transition message",
+      "- After 2-3 exchanges, transition naturally — include the exact phrase 'personalized estimate' in your transition message",
       "- Transition message must end with a declarative statement, never a question",
       "",
       "RULES:",
       "- Never use 'I' — speak as 'we' on behalf of the practice",
       "- Never be pushy or use urgency tactics",
-      "- Never mention specific prices — that comes in the estimate",
-      "- Keep each response to 2-3 sentences MAXIMUM. No exceptions. If you cannot say it in 3 sentences, cut it. Brevity builds trust. Long responses lose patients.",
-      "- Never use the words: journey, exciting, amazing, wonderful, Wonderful",
+      "- Never mention specific prices",
+      "- Keep each response to 2-3 sentences MAXIMUM",
+      "- Never use the words: journey, exciting, amazing, wonderful",
       "- Never open any response with 'We'",
-      "- Once you have sent a transition message containing 'personalized estimate', all subsequent responses must be one sentence only, ending with a forward-pointing statement, never a question",
-      "- CRITICAL: After no more than 3 patient responses, you MUST transition to the estimate. End with a closing message that naturally moves them forward and includes the phrase 'personalized estimate'",
-      "- You already have the patient's timing preference, financial readiness, and financing interest from their earlier answers. Never ask about these again — they are already captured. Only ask about things not yet known: specific concerns, recovery questions, what they want to look or feel like, previous consultations, lifestyle considerations.",
-      "- Every response that is NOT a transition message MUST end with exactly one question. The question should either deepen understanding of their specific situation OR offer a natural path forward. A simple, effective closing question format: 'Is there anything else you'd like to know about [procedure], or are you ready to see your personalized estimate?' — but make it specific to what was just discussed, not generic.",
-      "- Never mention financing options in the chat conversation. Financing was already addressed in the planning flow and will be handled by the care team. Do not reference it, offer it, or include it in transition messages.",
-      "- If the patient's message indicates they are ready to proceed — phrases like 'I'm ready', 'let's go', 'no questions', 'ready for my estimate', 'skip', 'continue', or any clear signal they want to move forward — do NOT ask another question. Respond with a single warm closing sentence that includes the phrase 'personalized estimate' and move them forward. Example: 'Everything we need is in place — your personalized estimate is ready.' Do not engage further.",
-      "",
-      "The goal: by the time they move forward, they feel heard, validated in their choices, educated enough to feel confident, and ready to take the next step.",
+      "- Once you have sent a transition message containing 'personalized estimate', all subsequent responses must be one sentence only",
+      "- CRITICAL: After no more than 3 patient responses, you MUST transition to the estimate",
+      "- Never ask about timing, financial readiness, or financing — already captured",
+      "- Every response that is NOT a transition message MUST end with exactly one question",
+      "- Never mention financing options in the chat conversation",
+      "- If the patient signals they are ready to proceed, respond with a single warm closing sentence that includes 'personalized estimate'",
     ].join('\n')
   }
 
-  // ── Claude API call ────────────────────────────────────────────────────────
+  // ── Backend proxy API call — key never exposed in browser ─────────────────
   async function callAI(history) {
-    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-    if (!apiKey) return FALLBACK_RESPONSE
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: {
-        'x-api-key':                                 apiKey,
-        'anthropic-version':                         '2023-06-01',
-        'content-type':                              'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true',
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model:      'claude-sonnet-4-20250514',
-        max_tokens: 180,
-        system:     buildSystemPrompt(),
-        messages:   history,
+        system: buildSystemPrompt(),
+        messages: history,
       }),
     })
 
@@ -246,10 +205,8 @@ export default function ConversationalAI({
     return data.content[0].text
   }
 
-  // ── Handle AI response (shared) ────────────────────────────────────────────
   async function processResponse(history) {
     try {
-      // Min 1.5 s typing indicator; API call runs in parallel
       const [responseText] = await Promise.all([
         callAI(history),
         new Promise(r => setTimeout(r, 1500)),
@@ -263,13 +220,10 @@ export default function ConversationalAI({
       onConversationChange(newHistory)
 
       const lower = responseText.toLowerCase()
-
-      // Also check the patient's most recent message for "ready" signals
       const lastUserMsg = history[history.length - 1]
       const userLower   = lastUserMsg?.role === 'user' ? lastUserMsg.content.toLowerCase() : ''
 
       const shouldTransition =
-        // AI response signals
         lower.includes('personalized estimate') ||
         lower.includes('your estimate')         ||
         lower.includes('put together your estimate') ||
@@ -277,7 +231,6 @@ export default function ConversationalAI({
         lower.includes('see your estimate')     ||
         lower.includes('ready to see')          ||
         lower.includes('next step')             ||
-        // Patient "ready" signals — trigger CTA regardless of AI reply
         userLower.includes("i'm ready")         ||
         userLower.includes('ready for my estimate') ||
         userLower.includes('no questions')      ||
@@ -285,7 +238,6 @@ export default function ConversationalAI({
         userLower.includes('skip')              ||
         userLower.includes('move forward')      ||
         userLower.includes('continue')          ||
-        // Hard cap
         newHistory.filter(m => m.role === 'user').length >= 3
 
       if (shouldTransition) setShowCTA(true)
@@ -300,65 +252,40 @@ export default function ConversationalAI({
     }
   }
 
-  // ── Submit initial message ─────────────────────────────────────────────────
   function handleBegin() {
     const text = inputText.trim()
     if (!text) return
-
     recognitionRef.current?.stop()
-    onInitialText(text)  // persist as patientOwnWords
-
+    onInitialText(text)
     const history = [{ role: 'user', content: text }]
     setMessages(history)
     setIsStarted(true)
-
-    // Skip API entirely for immediate-transition phrases
-    if (isSkipTrigger(text)) {
-      setShowCTA(true)
-      return
-    }
-
+    if (isSkipTrigger(text)) { setShowCTA(true); return }
     setIsTyping(true)
     processResponse(history)
   }
 
-  // ── Submit follow-up message ───────────────────────────────────────────────
   function handleFollowUp() {
     const text = followUpText.trim()
     if (!text) return
-
     recognitionRef.current?.stop()
     const newHistory = [...messages, { role: 'user', content: text }]
     setMessages(newHistory)
     setFollowUpText('')
-
-    // Skip API entirely for immediate-transition phrases
-    if (isSkipTrigger(text)) {
-      setShowCTA(true)
-      return
-    }
-
+    if (isSkipTrigger(text)) { setShowCTA(true); return }
     setIsTyping(true)
     processResponse(newHistory)
   }
 
-  // ── Voice recording — routes to active input ───────────────────────────────
   function toggleRecording() {
-    if (isRecording) {
-      recognitionRef.current?.stop()
-      return
-    }
-
+    if (isRecording) { recognitionRef.current?.stop(); return }
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!SpeechRec) return
-
     const setter = isStarted ? setFollowUpText : setInputText
-
     const rec = new SpeechRec()
     rec.continuous     = true
     rec.interimResults = true
     rec.lang           = 'en-US'
-
     rec.onresult = e => {
       let finalChunk = '', interimChunk = ''
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -372,28 +299,22 @@ export default function ConversationalAI({
         setInterimText(interimChunk)
       }
     }
-
     rec.onerror = () => { setIsRecording(false); setInterimText('') }
     rec.onend   = () => { setIsRecording(false); setInterimText('') }
-
     rec.start()
     recognitionRef.current = rec
     setIsRecording(true)
   }
 
-  // ── Derived ────────────────────────────────────────────────────────────────
   const aiCount    = messages.filter(m => m.role === 'assistant').length
   const userCount  = messages.filter(m => m.role === 'user').length
   const canReply   = isStarted && !isTyping && userCount < 5
   const firstAIIdx = messages.findIndex(m => m.role === 'assistant')
 
-  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="screen convo-ai">
-
       <button className="btn-back" onClick={onBack}>← Back</button>
 
-      {/* ── Procedure affirmation — shown above headline in both phases ── */}
       {buildAffirmation(proceduresSelected) && (
         <p className="convo-ai__affirmation">
           {buildAffirmation(proceduresSelected)}
@@ -401,26 +322,15 @@ export default function ConversationalAI({
       )}
 
       {!isStarted ? (
-
-        // ── Phase 1: initial input ────────────────────────────────────────
         <div className="convo-ai__phase1">
-
-          <h2 className="screen__headline">
-            What brings you here?
-          </h2>
-
+          <h2 className="screen__headline">What brings you here?</h2>
           <p className="convo-ai__fixed-sub">
             Share any questions, concerns, or anything else you'd like your care team to know.
           </p>
-
-          {subheadline && (
-            <p className="convo-ai__sub">{subheadline}</p>
-          )}
-
+          {subheadline && <p className="convo-ai__sub">{subheadline}</p>}
           {isRecording && interimText && (
             <p className="own-words__interim" aria-live="polite">{interimText}</p>
           )}
-
           <div className="convo-ai__phase1-input-wrap">
             <div className="convo-ai__reply-row convo-ai__reply-row--phase1">
               <input
@@ -428,26 +338,14 @@ export default function ConversationalAI({
                 className="convo-ai__reply-input"
                 value={inputText}
                 onChange={e => setInputText(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    handleBegin()
-                  }
-                }}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleBegin() } }}
                 placeholder="Type your message here..."
                 aria-label="Share anything on your mind"
               />
-              <button
-                type="button"
-                className="convo-ai__send"
-                onClick={handleBegin}
-                disabled={!inputText.trim()}
-                aria-label="Send"
-              >
+              <button type="button" className="convo-ai__send" onClick={handleBegin} disabled={!inputText.trim()} aria-label="Send">
                 Send
               </button>
             </div>
-
             {speechAvailable && (
               <>
                 <p className="convo-ai__phase1-or">or</p>
@@ -463,23 +361,14 @@ export default function ConversationalAI({
               </>
             )}
           </div>
-
           <p className="convo-ai__ai-disclaimer">
             This conversation is powered by AI. A member of our care team will follow up personally.
           </p>
-
         </div>
-
       ) : (
-
-        // ── Phase 2: live chat ────────────────────────────────────────────
         <>
-          <h2 className="screen__headline">
-            What brings you here?
-          </h2>
-
+          <h2 className="screen__headline">What brings you here?</h2>
           <div className="convo-ai__chat">
-
             {messages.map((msg, i) => (
               <div key={i} className={`convo-ai__bubble-wrap convo-ai__bubble-wrap--${msg.role}`}>
                 {msg.role === 'assistant' && i === firstAIIdx && (
@@ -490,23 +379,18 @@ export default function ConversationalAI({
                 </div>
               </div>
             ))}
-
             {isTyping && (
               <div className="convo-ai__bubble-wrap convo-ai__bubble-wrap--assistant">
                 {aiCount === 0 && (
                   <span className="convo-ai__practice-label">Colorado Plastic Surgery Center</span>
                 )}
                 <div className="convo-ai__bubble convo-ai__bubble--assistant convo-ai__bubble--typing">
-                  <div className="loading-dots" aria-label="Typing">
-                    <span /><span /><span />
-                  </div>
+                  <div className="loading-dots" aria-label="Typing"><span /><span /><span /></div>
                 </div>
               </div>
             )}
-
             <div ref={chatEndRef} />
           </div>
-
           {canReply && (
             <div className="convo-ai__reply">
               {isRecording && interimText && (
@@ -518,12 +402,7 @@ export default function ConversationalAI({
                   className="convo-ai__reply-input"
                   value={followUpText}
                   onChange={e => setFollowUpText(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      handleFollowUp()
-                    }
-                  }}
+                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleFollowUp() } }}
                   placeholder="Reply…"
                   aria-label="Your reply"
                   autoFocus
@@ -538,26 +417,15 @@ export default function ConversationalAI({
                     <MicIcon />
                   </button>
                 )}
-                <button
-                  type="button"
-                  className="convo-ai__send"
-                  onClick={handleFollowUp}
-                  disabled={!followUpText.trim()}
-                  aria-label="Send reply"
-                >
+                <button type="button" className="convo-ai__send" onClick={handleFollowUp} disabled={!followUpText.trim()} aria-label="Send reply">
                   Send
                 </button>
               </div>
             </div>
           )}
-
           {showCTA && (
             <div className="convo-ai__cta-wrap">
-              <button
-                type="button"
-                className="convo-ai__cta"
-                onClick={onContinue}
-              >
+              <button type="button" className="convo-ai__cta" onClick={onContinue}>
                 See my personalized estimate →
               </button>
               <p className="convo-ai__cta-sub">Just 3 quick questions before your estimate is ready.</p>
@@ -565,7 +433,6 @@ export default function ConversationalAI({
           )}
         </>
       )}
-
     </div>
   )
 }
