@@ -130,13 +130,6 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
   useEffect(() => {
     onView?.()
 
-    const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-
-    if (!apiKey) {
-      setContextText(FALLBACK_TEXT)
-      return
-    }
-
     const systemPrompt = [
       "You are writing a brief message on behalf of a luxury plastic surgery practice to a patient who just completed a planning estimator. Maximum 2 sentences. Never exceed 30 words total. Speak directly to the patient as 'you'. Never use 'I'. Never open with 'Thank you' or 'We'. Do not use words like 'wonderful', 'excited', 'amazing', or 'journey'. Be warm but grounded — like a confident, caring professional, not a cheerleader. Reference something specific the patient shared. Use 'investment' not 'cost'. No promises about results. Never mention a specific doctor's name — not Dr. Slenkovich, not Dr. Roider. Always refer to 'your surgeon' or 'our team' or 'the practice.' The patient may be routed to either surgeon and we never pre-assign in the estimate.",
       "",
@@ -149,22 +142,13 @@ export default function Estimate({ answers, onContinue, onBack, onView }) {
       surgeonRecommendation ? `- Surgeon recommendation: ${surgeonRecommendation}` : null,
     ].filter(line => line !== null).join('\n')
 
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('/api/estimate-context', {
       method: 'POST',
       headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 150,
         system: systemPrompt,
-        messages: [{
-          role: 'user',
-          content: 'Write the personalized context. Exactly 2 sentences. Maximum 45 words.',
-        }],
       }),
     })
       .then(res => {
